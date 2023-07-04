@@ -23,7 +23,7 @@ class TestChamberWorld extends BWorldCanvas
 
     update(updateGear: BUpdateGear)
     {
-        
+		console.log(updateGear.extra);
     }
 
     draw(renderGear: BRenderGearCanvas)

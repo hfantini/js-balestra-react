@@ -41,7 +41,7 @@ const TestChamber = () =>
 
     return (
         <div className="TestChamberContainer">
-		    <BalestraFrame id="tc_BFrame" worldRef={world} />
+		    <BalestraFrame id="tc_BFrame" worldRef={world} extra={"PortalGun"} />
         </div>
     );
 };

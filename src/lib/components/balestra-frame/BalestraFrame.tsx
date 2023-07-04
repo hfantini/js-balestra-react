@@ -30,12 +30,13 @@ interface BalestraFrameProps
 {
     id:string
 	worldRef:React.MutableRefObject<BWorldCanvas|undefined>
+	extra?: any
 };
 
 // == COMPONENT(S)
 // ============================================================================
 
-const BalestraFrame = ( {id, worldRef}:BalestraFrameProps ) =>
+const BalestraFrame = ( {id, worldRef, extra = undefined}:BalestraFrameProps ) =>
 {
 	const containerRef = useRef<HTMLDivElement|null>(null);
 	const canvasRef = useRef<HTMLCanvasElement|null>(null);
@@ -43,11 +44,16 @@ const BalestraFrame = ( {id, worldRef}:BalestraFrameProps ) =>
 	const canvasSizeRef = useRef<BVector2|undefined>(undefined);
 	const engineRef = useRef<BEngineCanvas|undefined>(undefined);
 	const requestAnimationFrameRef = useRef<number|undefined>(undefined);
+	const extraRef = useRef<any|undefined>(undefined); 
 
 	useEffect( () =>
 	{
 		resizeObservableRef.current = new ResizeObserver(onElementResize);
-		requestAnimationFrameRef.current = window.requestAnimationFrame(tick);
+
+		if(!requestAnimationFrameRef.current)
+		{
+			requestAnimationFrameRef.current = window.requestAnimationFrame(tick);
+		}
 
 		return () =>
 		{
@@ -56,6 +62,7 @@ const BalestraFrame = ( {id, worldRef}:BalestraFrameProps ) =>
 			if(requestAnimationFrameRef.current)
 			{
 				window.cancelAnimationFrame(requestAnimationFrameRef.current)
+				requestAnimationFrameRef.current = undefined;
 			}
 		}
 	}, [])
@@ -80,11 +87,15 @@ const BalestraFrame = ( {id, worldRef}:BalestraFrameProps ) =>
 		}
 	}, [canvasSizeRef]);
 
+	useEffect( () => {
+		extraRef.current = extra;
+	}, [extra]);
+
 	const init = () =>
 	{
-		if(canvasRef.current)
+		if(containerRef.current, canvasRef.current)
 		{
-			engineRef.current = new BEngineCanvas(`${id}_BEngine`, canvasRef.current);
+			engineRef.current = new BEngineCanvas(`${id}_BEngine`, containerRef.current!, canvasRef.current);
 		}
 	};
 
@@ -97,9 +108,7 @@ const BalestraFrame = ( {id, worldRef}:BalestraFrameProps ) =>
 
 			worldRef.current.parent = engineRef.current;
 			engineRef.current.world = worldRef.current;
-
-			console.log(engineRef.current.createRenderGear());
-			engineRef.current.tick(totalElapsedTime);
+			engineRef.current.tick(totalElapsedTime, extraRef.current);
 		}
 
 		requestAnimationFrameRef.current = window.requestAnimationFrame(tick);
