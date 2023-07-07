@@ -7,15 +7,12 @@ Creation Date: 07/2023
 License: MIT
 
 <br/>
-<br/>
 
 # DESCRIPTION
 
 This project is intended to be an implementation of <a href="https://github.com/hfantini/js-balestra">Balestra Engine</a> for the React library.
 
 Note: It's experimental and for study purposes only. The current status of this project is unfinished.
-
-<br/>
 
 # TECHNOLOGY
 
